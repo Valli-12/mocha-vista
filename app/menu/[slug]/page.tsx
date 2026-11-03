@@ -2,30 +2,39 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import { menuItems } from "@/data/menu";
-import { formatINR } from "@/lib/utils";
 import ProductDetailClient from "./ProductDetailClient";
+import ProductCard from "@/components/ui/ProductCard";
+import DietBadge from "@/components/ui/DietBadge";
+import { ChevronRight } from "lucide-react";
 
 export async function generateStaticParams() {
   return menuItems.map((item) => ({ slug: item.slug }));
 }
 
-export async function generateMetadata(
-  props: PageProps<"/menu/[slug]">
-): Promise<Metadata> {
-  const { slug } = await props.params;
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
   const item = menuItems.find((i) => i.slug === slug);
-  if (!item) return { title: "Not Found — Mocha Vista" };
+  if (!item) return { title: "Item Not Found" };
   return {
-    title: `${item.name} — Mocha Vista`,
+    title: item.name,
     description: item.description,
+    openGraph: {
+      title: `${item.name} | Mocha Vista Menu`,
+      description: item.description,
+      images: [{ url: item.image, alt: item.name }],
+    },
   };
 }
 
-export default async function ProductPage(props: PageProps<"/menu/[slug]">) {
-  const { slug } = await props.params;
+export default async function ProductPage({ params }: PageProps) {
+  const { slug } = await params;
   const item = menuItems.find((i) => i.slug === slug);
 
   if (!item) notFound();
@@ -35,211 +44,103 @@ export default async function ProductPage(props: PageProps<"/menu/[slug]">) {
     .slice(0, 4);
 
   return (
-    <>
-      <Navbar />
-      <main style={{ background: "var(--cream)", minHeight: "80vh" }}>
-        {/* Breadcrumb */}
-        <div
-          style={{
-            borderBottom: "1px solid var(--border)",
-            background: "var(--cream)",
-          }}
-        >
-          <div className="container" style={{ padding: "1rem 1.5rem" }}>
-            <nav aria-label="Breadcrumb">
-              <ol
-                style={{
-                  listStyle: "none",
-                  margin: 0,
-                  padding: 0,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  fontFamily: "var(--font-inter), sans-serif",
-                  fontSize: "0.82rem",
-                  color: "var(--text-muted)",
-                }}
-              >
-                <li>
-                  <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>
-                    Home
-                  </Link>
-                </li>
-                <li aria-hidden="true">›</li>
-                <li>
-                  <Link href="/menu" style={{ color: "var(--text-muted)", textDecoration: "none" }}>
-                    Menu
-                  </Link>
-                </li>
-                <li aria-hidden="true">›</li>
-                <li>
-                  <Link
-                    href={`/menu?category=${encodeURIComponent(item.category)}`}
-                    style={{ color: "var(--text-muted)", textDecoration: "none" }}
-                  >
-                    {item.category}
-                  </Link>
-                </li>
-                <li aria-hidden="true">›</li>
-                <li aria-current="page" style={{ color: "var(--espresso)", fontWeight: 500 }}>
-                  {item.name}
-                </li>
-              </ol>
-            </nav>
-          </div>
+    <main className="min-h-[80vh] bg-[#f5ebdd] pb-12">
+      {/* Breadcrumbs */}
+      <div className="border-b border-[#201b19]/10 bg-[#f5ebdd]/60">
+        <div className="max-w-7xl mx-auto px-6 py-3">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 flex-wrap text-xs text-[#9b8272] font-sans">
+              <li>
+                <Link href="/" className="hover:text-[#201b19] transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </li>
+              <li>
+                <Link href="/menu" className="hover:text-[#201b19] transition-colors">
+                  Menu
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </li>
+              <li>
+                <Link
+                  href={`/menu?category=${encodeURIComponent(item.category)}`}
+                  className="hover:text-[#201b19] transition-colors"
+                >
+                  {item.category}
+                </Link>
+              </li>
+              <li aria-hidden="true">
+                <ChevronRight className="w-3.5 h-3.5" />
+              </li>
+              <li aria-current="page" className="font-semibold text-[#201b19] truncate max-w-[200px] sm:max-w-none">
+                {item.name}
+              </li>
+            </ol>
+          </nav>
         </div>
+      </div>
 
-        {/* Product Detail */}
-        <div className="container" style={{ padding: "3rem 1.5rem" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-              gap: "3rem",
-              alignItems: "start",
-            }}
-          >
-            {/* Image */}
-            <div
-              style={{
-                position: "relative",
-                borderRadius: "var(--radius-lg)",
-                overflow: "hidden",
-                aspectRatio: "1/1",
-                boxShadow: "var(--shadow-lg)",
-              }}
-            >
+      {/* Product Detail Layout */}
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          {/* Main Image */}
+          <div className="lg:col-span-6 sticky top-28">
+            <div className="relative aspect-square w-full rounded-3xl overflow-hidden shadow-2xl border border-[#201b19]/10 bg-white">
               <Image
                 src={item.image}
                 alt={item.name}
                 fill
                 priority
-                sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: "cover" }}
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
               />
               {item.isVegetarian !== undefined && (
-                <div
-                  aria-label={item.isVegetarian ? "Vegetarian" : "Non-vegetarian"}
-                  style={{
-                    position: "absolute",
-                    top: "1rem",
-                    left: "1rem",
-                    background: "white",
-                    borderRadius: "4px",
-                    padding: "4px 8px",
-                    border: `1.5px solid ${item.isVegetarian ? "#22863a" : "#cb2431"}`,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.4rem",
-                    fontFamily: "var(--font-inter), sans-serif",
-                    fontSize: "0.75rem",
-                    fontWeight: 500,
-                    color: item.isVegetarian ? "#22863a" : "#cb2431",
-                  }}
-                >
-                  <span
-                    className={`diet-dot ${item.isVegetarian ? "veg" : "nonveg"}`}
-                  />
-                  {item.isVegetarian ? "Veg" : "Non-Veg"}
+                <div className="absolute top-4 left-4 z-10">
+                  <DietBadge isVegetarian={item.isVegetarian} showText />
                 </div>
               )}
             </div>
-
-            {/* Detail */}
-            <ProductDetailClient item={item} />
           </div>
 
-          {/* Related Products */}
-          {related.length > 0 && (
-            <div style={{ marginTop: "4rem" }}>
-              <h2
-                style={{
-                  fontFamily: "var(--font-cormorant), serif",
-                  fontSize: "1.75rem",
-                  fontWeight: 600,
-                  color: "var(--espresso)",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                You May Also Like
-              </h2>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-                  gap: "1.25rem",
-                }}
-              >
-                {related.map((rel) => (
-                  <Link
-                    key={rel.id}
-                    href={`/menu/${rel.slug}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <article
-                      style={{
-                        border: "1px solid var(--border)",
-                        borderRadius: "var(--radius-lg)",
-                        overflow: "hidden",
-                        transition: "transform 0.25s, box-shadow 0.25s",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "var(--shadow-md)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.transform = "";
-                        (e.currentTarget as HTMLElement).style.boxShadow = "";
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: "relative",
-                          aspectRatio: "4/3",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <Image
-                          src={rel.image}
-                          alt={rel.name}
-                          fill
-                          sizes="250px"
-                          style={{ objectFit: "cover" }}
-                        />
-                      </div>
-                      <div style={{ padding: "1rem" }}>
-                        <h3
-                          style={{
-                            fontFamily: "var(--font-cormorant), serif",
-                            fontSize: "1.1rem",
-                            fontWeight: 600,
-                            color: "var(--espresso)",
-                            marginBottom: "0.25rem",
-                          }}
-                        >
-                          {rel.name}
-                        </h3>
-                        <p
-                          style={{
-                            fontFamily: "var(--font-cormorant), serif",
-                            fontSize: "1rem",
-                            color: "var(--caramel)",
-                            fontWeight: 600,
-                          }}
-                        >
-                          {formatINR(rel.price)}
-                        </p>
-                      </div>
-                    </article>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Interactive Customization Details */}
+          <div className="lg:col-span-6 bg-white/60 backdrop-blur-xs p-6 sm:p-10 rounded-3xl border border-[#201b19]/10 shadow-sm">
+            <ProductDetailClient item={item} />
+          </div>
         </div>
-      </main>
-      <Footer />
-    </>
+
+        {/* Related Products */}
+        {related.length > 0 && (
+          <section className="mt-12 pt-10 border-t border-[#201b19]/10">
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#b98254] block mb-1">
+                  More From {item.category}
+                </span>
+                <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#201b19]">
+                  You May Also Like
+                </h2>
+              </div>
+              <Link
+                href={`/menu?category=${encodeURIComponent(item.category)}`}
+                className="hidden sm:inline-flex text-xs font-semibold uppercase tracking-wider text-[#b98254] hover:text-[#8f5e35] transition-colors"
+              >
+                View Category →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {related.map((rel) => (
+                <ProductCard key={rel.id} item={rel} />
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </main>
   );
 }

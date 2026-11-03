@@ -1,153 +1,39 @@
-"use client";
-
 import Link from "next/link";
-import Image from "next/image";
 import { featuredItems } from "@/data/menu";
-import { formatINR } from "@/lib/utils";
-import { useCart } from "@/context/CartContext";
+import ProductCard from "@/components/ui/ProductCard";
+import { ArrowRight } from "lucide-react";
 
 export default function FeaturedProducts() {
-  const { addItem } = useCart();
-
   return (
-    <section className="section" style={{ background: "var(--cream)" }}>
-      <div className="container">
-        {/* Header */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginBottom: "1.75rem",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}
-        >
+    <section id="featured" className="py-12 md:py-16 bg-[#f5ebdd]">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 md:mb-10">
           <div>
-            <span className="section-label">Chef&apos;s Picks</span>
-            <h2 className="section-title">Featured Favourites</h2>
-            <p className="section-subtitle">
-              A curated selection of the dishes our guests love most — each one
-              prepared with care.
+            <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#b98254] block mb-2 font-sans">
+              Chef&apos;s Curated Selections
+            </span>
+            <h2 className="font-serif text-4xl sm:text-5xl font-semibold text-[#201b19] tracking-tight">
+              Featured Favourites
+            </h2>
+            <p className="font-sans text-sm sm:text-base text-[#5a4a3a] mt-3 max-w-lg leading-relaxed">
+              A handpicked selection of our most loved preparations — balanced flavours crafted with authentic ingredients.
             </p>
           </div>
-          <Link href="/menu" className="btn-secondary">
-            View Full Menu
+
+          <Link
+            href="/menu"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#201b19] hover:text-[#b98254] group font-sans transition-colors self-start md:self-end"
+          >
+            <span>View Full Menu</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
 
-        {/* Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
+        {/* Responsive Product Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {featuredItems.map((item) => (
-            <article key={item.id} className="product-card">
-              {/* Image */}
-              <Link href={`/menu/${item.slug}`} className="product-card-image" style={{ display: "block" }}>
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  style={{ objectFit: "cover" }}
-                />
-                {/* Diet badge */}
-                {item.isVegetarian !== undefined && (
-                  <div
-                    aria-label={item.isVegetarian ? "Vegetarian" : "Non-vegetarian"}
-                    style={{
-                      position: "absolute",
-                      top: "0.75rem",
-                      left: "0.75rem",
-                      background: "white",
-                      borderRadius: "4px",
-                      padding: "3px 6px",
-                      border: `1.5px solid ${item.isVegetarian ? "#22863a" : "#cb2431"}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <span
-                      className={`diet-dot ${item.isVegetarian ? "veg" : "nonveg"}`}
-                    />
-                  </div>
-                )}
-              </Link>
-
-              {/* Body */}
-              <div className="product-card-body">
-                <Link
-                  href={`/menu/${item.slug}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <h3
-                    style={{
-                      fontFamily: "var(--font-cormorant), serif",
-                      fontSize: "1.2rem",
-                      fontWeight: 600,
-                      color: "var(--espresso)",
-                      marginBottom: "0.375rem",
-                      transition: "color 0.2s",
-                    }}
-                  >
-                    {item.name}
-                  </h3>
-                </Link>
-                <p
-                  style={{
-                    fontFamily: "var(--font-inter), sans-serif",
-                    fontSize: "0.85rem",
-                    color: "var(--text-muted)",
-                    lineHeight: 1.6,
-                    marginBottom: "1rem",
-                    flex: 1,
-                  }}
-                >
-                  {item.description.length > 90
-                    ? item.description.slice(0, 88) + "…"
-                    : item.description}
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    marginTop: "auto",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-cormorant), serif",
-                      fontSize: "1.3rem",
-                      fontWeight: 600,
-                      color: "var(--espresso)",
-                    }}
-                  >
-                    {formatINR(item.price)}
-                  </span>
-                  <button
-                    id={`add-to-cart-featured-${item.id}`}
-                    className="btn-caramel"
-                    onClick={() =>
-                      addItem({
-                        id: item.id,
-                        name: item.name,
-                        price: item.price,
-                        image: item.image,
-                        quantity: 1,
-                      })
-                    }
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </article>
+            <ProductCard key={item.id} item={item} />
           ))}
         </div>
       </div>

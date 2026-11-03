@@ -5,6 +5,7 @@ import React, {
   useContext,
   useReducer,
   useEffect,
+  useState,
   ReactNode,
 } from "react";
 
@@ -76,6 +77,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   }
 }
 
+type ToastData = {
+  id: string;
+  message: string;
+  itemName?: string;
+};
+
 type CartContextType = {
   items: CartItem[];
   addItem: (item: CartItem) => void;
@@ -84,6 +91,8 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   subtotal: number;
+  toast: ToastData | null;
+  dismissToast: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -92,6 +101,7 @@ const STORAGE_KEY = "mv_cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const [toast, setToast] = useState<ToastData | null>(null);
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -104,7 +114,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         }
       }
     } catch {
-      // Ignore storage errors
+      // Ignore storage errors in private browsing or SSR
     }
   }, []);
 
@@ -123,17 +133,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
     0
   );
 
+  const addItem = (item: CartItem) => {
+    dispatch({ type: "ADD_ITEM", payload: item });
+    setToast({
+      id: `${item.id}-${Date.now()}`,
+      message: `Added to cart`,
+      itemName: item.name,
+    });
+  };
+
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      setToast(null);
+    }, 3200);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
   return (
     <CartContext.Provider
       value={{
         items: state.items,
-        addItem: (item) => dispatch({ type: "ADD_ITEM", payload: item }),
+        addItem,
         removeItem: (id) => dispatch({ type: "REMOVE_ITEM", payload: id }),
         updateQuantity: (id, quantity) =>
           dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } }),
         clearCart: () => dispatch({ type: "CLEAR_CART" }),
         totalItems,
         subtotal,
+        toast,
+        dismissToast: () => setToast(null),
       }}
     >
       {children}

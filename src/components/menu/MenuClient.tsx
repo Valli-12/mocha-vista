@@ -3,18 +3,16 @@
 import { useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { menuItems } from "@/data/menu";
 import { categories } from "@/data/categories";
-import { formatINR } from "@/lib/utils";
-import { useCart } from "@/context/CartContext";
+import ProductCard from "@/components/ui/ProductCard";
+import { Search, X, SlidersHorizontal, Sparkles } from "lucide-react";
 
 type SortOption = "default" | "price-asc" | "price-desc" | "name-asc";
 
 export default function MenuClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { addItem } = useCart();
 
   const initialCategory = searchParams.get("category") || "All";
 
@@ -90,192 +88,144 @@ export default function MenuClient() {
     sort !== "default";
 
   return (
-    <>
-      {/* Premium Menu Hero */}
-<section
-  className="menu-hero"
-  style={{
-    backgroundImage: `
-      linear-gradient(
-        90deg,
-        rgba(24, 17, 13, 0.78),
-        rgba(24, 17, 13, 0.48),
-        rgba(24, 17, 13, 0.65)
-      ),
-      url('/coffee.jpg')
-    `,
-  }}
->
-  <div className="menu-hero-content">
-    <span className="menu-hero-label">Explore</span>
+    <div className="pb-12">
+      {/* Premium Menu Hero Banner */}
+      <section className="relative min-h-[220px] md:min-h-[260px] flex items-center justify-center overflow-hidden bg-[#201b19] text-[#f5ebdd] px-6 py-10 md:py-12">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1600&q=85"
+            alt="Mocha Vista café menu background"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-35"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#201b19] via-[#201b19]/60 to-transparent" />
 
-    <h1>Our Menu</h1>
+        <div className="relative z-10 max-w-2xl mx-auto text-center">
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.28em] uppercase text-[#b98254] mb-3 font-sans">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Handcrafted With Heart</span>
+          </span>
+          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-semibold mb-4 tracking-tight">
+            Our Menu
+          </h1>
+          <p className="font-sans text-sm sm:text-base text-[#f5ebdd]/80 max-w-lg mx-auto leading-relaxed">
+            From single-origin beans and artisanal pastries to stone-baked sourdough pizzas, hand-pressed burgers, and fresh pasta.
+          </p>
+        </div>
+      </section>
 
-    <p>
-      From morning coffee to evening desserts — everything
-      prepared with care and served with warmth.
-    </p>
-  </div>
-</section>
-
-      {/* Controls */}
-      <div
-        style={{
-          background: "var(--cream)",
-          borderBottom: "1px solid var(--border)",
-          position: "sticky",
-          top: 68,
-          zIndex: 30,
-        }}
-      >
-        <div
-          className="container"
-          style={{ padding: "1rem 1.5rem" }}
-        >
-          {/* Category chips */}
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              overflowX: "auto",
-              paddingBottom: "0.75rem",
-              scrollbarWidth: "none",
-            }}
-          >
-            {allCategories.map((cat) => (
-              <button
-                key={cat}
-                id={`cat-filter-${cat.replace(/\s+/g, "-").toLowerCase()}`}
-                className={`filter-chip ${selectedCategory === cat ? "active" : ""}`}
-                onClick={() => handleCategoryChange(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+      {/* Sticky Filter Controls */}
+      <div className="sticky top-[70px] z-30 bg-[#f5ebdd]/95 backdrop-blur-md border-b border-[#201b19]/10 shadow-xs">
+        <div className="max-w-7xl mx-auto px-6 py-4 space-y-4">
+          {/* Horizontal Category Scroll */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none font-sans">
+            {allCategories.map((cat) => {
+              const isSelected = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  id={`cat-filter-${cat.replace(/\s+/g, "-").toLowerCase()}`}
+                  onClick={() => handleCategoryChange(cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider uppercase whitespace-nowrap transition-all ${
+                    isSelected
+                      ? "bg-[#201b19] text-[#f5ebdd] shadow-sm"
+                      : "bg-white/80 text-[#5a4a3a] border border-[#201b19]/10 hover:border-[#b98254] hover:text-[#201b19]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Search + Filters row */}
-          <div
-            style={{
-              display: "flex",
-              gap: "0.75rem",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            {/* Search */}
-            <div className="search-input-wrapper" style={{ flex: "1 1 240px" }}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8" />
-                <path d="M21 21l-4.35-4.35" />
-              </svg>
+          {/* Search & Dietary Filters Row */}
+          <div className="flex flex-wrap items-center gap-3 font-sans">
+            {/* Search Input */}
+            <div className="relative flex-1 min-w-[220px]">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9b8272]" />
               <input
                 id="menu-search"
-                className="form-input"
                 type="search"
-                placeholder="Search dishes…"
+                placeholder="Search coffee, pizzas, burgers..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                aria-label="Search menu"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#201b19]/15 bg-white text-xs sm:text-sm text-[#201b19] placeholder:text-[#9b8272] focus:outline-none focus:border-[#b98254] focus:ring-1 focus:ring-[#b98254] transition-all"
+                aria-label="Search menu items"
               />
             </div>
 
-            {/* Veg filter */}
+            {/* Veg Only Toggle */}
             <button
-              id="veg-filter-btn"
-              className={`filter-chip ${vegOnly ? "active" : ""}`}
-              onClick={() => { setVegOnly(!vegOnly); setNonVegOnly(false); }}
-              style={{ borderColor: vegOnly ? undefined : "#22863a", color: vegOnly ? undefined : "#22863a" }}
+              onClick={() => {
+                setVegOnly(!vegOnly);
+                setNonVegOnly(false);
+              }}
+              className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
+                vegOnly
+                  ? "bg-emerald-700 text-white border-emerald-700 shadow-xs"
+                  : "bg-white text-emerald-800 border-emerald-700/30 hover:border-emerald-700"
+              }`}
             >
-              <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: "#22863a",
-                  border: "1.5px solid #22863a",
-                  flexShrink: 0,
-                  display: "inline-block",
-                }}
-              />
-              Veg Only
+              <span className="w-2 h-2 rounded-full bg-emerald-600 border border-current" />
+              <span>Veg Only</span>
             </button>
 
-            {/* Non-veg filter */}
+            {/* Non-Veg Toggle */}
             <button
-              id="nonveg-filter-btn"
-              className={`filter-chip ${nonVegOnly ? "active" : ""}`}
-              onClick={() => { setNonVegOnly(!nonVegOnly); setVegOnly(false); }}
-              style={{ borderColor: nonVegOnly ? undefined : "#cb2431", color: nonVegOnly ? undefined : "#cb2431" }}
+              onClick={() => {
+                setNonVegOnly(!nonVegOnly);
+                setVegOnly(false);
+              }}
+              className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all border ${
+                nonVegOnly
+                  ? "bg-rose-700 text-white border-rose-700 shadow-xs"
+                  : "bg-white text-rose-800 border-rose-700/30 hover:border-rose-700"
+              }`}
             >
-              <span
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: "50%",
-                  background: "#cb2431",
-                  border: "1.5px solid #cb2431",
-                  flexShrink: 0,
-                  display: "inline-block",
-                }}
-              />
-              Non-Veg
+              <span className="w-2 h-2 rounded-full bg-rose-600 border border-current" />
+              <span>Non-Veg</span>
             </button>
 
-            {/* Sort */}
-            <select
-              id="menu-sort"
-              className="form-input"
-              style={{ width: "auto", paddingRight: "2rem", cursor: "pointer" }}
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortOption)}
-              aria-label="Sort menu items"
-            >
-              <option value="default">Sort: Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="name-asc">Name: A–Z</option>
-            </select>
+            {/* Sort Select */}
+            <div className="relative">
+              <select
+                id="menu-sort"
+                value={sort}
+                onChange={(e) => setSort(e.target.value as SortOption)}
+                aria-label="Sort menu items"
+                className="appearance-none pl-3.5 pr-8 py-2.5 rounded-xl border border-[#201b19]/15 bg-white text-xs font-medium text-[#201b19] focus:outline-none focus:border-[#b98254] cursor-pointer"
+              >
+                <option value="default">Sort: Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="name-asc">Name: A to Z</option>
+              </select>
+              <SlidersHorizontal className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#9b8272] pointer-events-none" />
+            </div>
 
-            {/* Clear */}
+            {/* Clear All */}
             {hasActiveFilters && (
               <button
-                id="clear-filters-btn"
-                className="filter-chip"
                 onClick={clearFilters}
-                style={{ color: "var(--caramel)", borderColor: "var(--caramel)" }}
+                className="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-[#b98254] hover:text-[#8f5e35] transition-colors ml-auto"
               >
-                ✕ Clear All
+                <X className="w-3.5 h-3.5" />
+                <span>Reset Filters</span>
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Results */}
-      <div
-        className="container"
-        style={{ padding: "1.75rem 1.5rem 3rem" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-inter), sans-serif",
-              fontSize: "0.875rem",
-              color: "var(--text-muted)",
-            }}
-          >
+      {/* Catalog Results Grid */}
+      <div className="max-w-7xl mx-auto px-6 pt-6">
+        <div className="flex items-center justify-between mb-6 text-xs font-sans text-[#5a4a3a]">
+          <p>
             Showing{" "}
-            <strong style={{ color: "var(--espresso)" }}>
+            <strong className="text-[#201b19] font-bold">
               {filtered.length}
             </strong>{" "}
             {filtered.length === 1 ? "item" : "items"}
@@ -284,203 +234,29 @@ export default function MenuClient() {
         </div>
 
         {filtered.length === 0 ? (
-          /* Empty state */
-          <div
-            style={{
-              textAlign: "center",
-              padding: "5rem 1rem",
-              color: "var(--text-muted)",
-            }}
-          >
-            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔍</div>
-            <h2
-              style={{
-                fontFamily: "var(--font-cormorant), serif",
-                fontSize: "1.75rem",
-                color: "var(--espresso)",
-                marginBottom: "0.5rem",
-              }}
-            >
-              No items found
+          <div className="text-center py-24 px-6 bg-white/60 backdrop-blur-xs rounded-3xl border border-[#201b19]/10 max-w-md mx-auto">
+            <span className="text-4xl block mb-4">🔍</span>
+            <h2 className="font-serif text-3xl font-semibold text-[#201b19] mb-2">
+              No Dishes Found
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--font-inter), sans-serif",
-                fontSize: "0.9rem",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Try a different search term or remove some filters.
+            <p className="font-sans text-xs sm:text-sm text-[#5a4a3a] leading-relaxed mb-6">
+              We couldn&apos;t find anything matching your search. Try resetting filters or browsing all categories.
             </p>
-            <button className="btn-secondary" onClick={clearFilters}>
-              Clear Filters
+            <button
+              onClick={clearFilters}
+              className="px-6 py-3 rounded-lg bg-[#b98254] hover:bg-[#8f5e35] text-white text-xs font-bold uppercase tracking-wider transition-colors font-sans"
+            >
+              Clear All Filters
             </button>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-              gap: "1.5rem",
-            }}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {filtered.map((item) => (
-              <article key={item.id} className="product-card">
-                <Link
-                  href={`/menu/${item.slug}`}
-                  className="product-card-image"
-                  style={{ display: "block" }}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                  {item.isVegetarian !== undefined && (
-                    <div
-                      aria-label={item.isVegetarian ? "Vegetarian" : "Non-vegetarian"}
-                      style={{
-                        position: "absolute",
-                        top: "0.75rem",
-                        left: "0.75rem",
-                        background: "white",
-                        borderRadius: "4px",
-                        padding: "3px 6px",
-                        border: `1.5px solid ${item.isVegetarian ? "#22863a" : "#cb2431"}`,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <span
-                        className={`diet-dot ${item.isVegetarian ? "veg" : "nonveg"}`}
-                      />
-                    </div>
-                  )}
-                  {!item.isAvailable && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background: "rgba(32,27,25,0.65)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: "var(--font-inter), sans-serif",
-                          fontSize: "0.8rem",
-                          fontWeight: 600,
-                          color: "var(--cream)",
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Unavailable
-                      </span>
-                    </div>
-                  )}
-                </Link>
-                <div className="product-card-body">
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter), sans-serif",
-                      fontSize: "0.68rem",
-                      fontWeight: 600,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "var(--caramel)",
-                      marginBottom: "0.25rem",
-                    }}
-                  >
-                    {item.category}
-                  </p>
-                  <Link
-                    href={`/menu/${item.slug}`}
-                    style={{ textDecoration: "none" }}
-                  >
-                    <h3
-                      style={{
-                        fontFamily: "var(--font-cormorant), serif",
-                        fontSize: "1.2rem",
-                        fontWeight: 600,
-                        color: "var(--espresso)",
-                        marginBottom: "0.375rem",
-                      }}
-                    >
-                      {item.name}
-                    </h3>
-                  </Link>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter), sans-serif",
-                      fontSize: "0.83rem",
-                      color: "var(--text-muted)",
-                      lineHeight: 1.6,
-                      marginBottom: "1rem",
-                      flex: 1,
-                    }}
-                  >
-                    {item.description.length > 80
-                      ? item.description.slice(0, 78) + "…"
-                      : item.description}
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginTop: "auto",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "var(--font-cormorant), serif",
-                        fontSize: "1.3rem",
-                        fontWeight: 600,
-                        color: "var(--espresso)",
-                      }}
-                    >
-                      {formatINR(item.price)}
-                    </span>
-                    {item.isAvailable ? (
-                      <button
-                        id={`add-to-cart-${item.id}`}
-                        className="btn-caramel"
-                        onClick={() =>
-                          addItem({
-                            id: item.id,
-                            name: item.name,
-                            price: item.price,
-                            image: item.image,
-                            quantity: 1,
-                          })
-                        }
-                      >
-                        Add
-                      </button>
-                    ) : (
-                      <span
-                        style={{
-                          fontFamily: "var(--font-inter), sans-serif",
-                          fontSize: "0.78rem",
-                          color: "var(--text-muted)",
-                        }}
-                      >
-                        Unavailable
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </article>
+              <ProductCard key={item.id} item={item} />
             ))}
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

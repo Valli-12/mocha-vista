@@ -4,32 +4,28 @@ import { categories } from "@/data/categories";
 
 export default function CategorySection() {
   return (
-    <section className="section" style={{ background: "var(--cream)" }}>
-      <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
-          <span className="section-label">Explore</span>
-          <h2 className="section-title">Browse by Category</h2>
-          <p
-            className="section-subtitle"
-            style={{ margin: "0 auto", textAlign: "center" }}
-          >
-            Whatever you&apos;re in the mood for — from a warming espresso to a
-            perfectly crafted burger.
+    <section className="py-12 md:py-16 bg-[#f5ebdd] border-t border-[#201b19]/10">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-8 md:mb-10">
+          <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#b98254] block mb-2 font-sans">
+            Explore By Flavour
+          </span>
+          <h2 className="font-serif text-4xl sm:text-5xl font-semibold text-[#201b19] tracking-tight mb-4">
+            Browse by Category
+          </h2>
+          <p className="font-sans text-sm sm:text-base text-[#5a4a3a] leading-relaxed">
+            From sunrise flat whites to wood-fired pizzas and decadent desserts — discover the variety crafted daily in our kitchen.
           </p>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-            gap: "1rem",
-          }}
-        >
+        {/* Categories Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/menu?category=${encodeURIComponent(cat.slug)}`}
-              className="category-card"
+              className="group relative block aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-300"
               aria-label={`Browse ${cat.name}`}
               id={`category-${cat.id}`}
             >
@@ -37,30 +33,17 @@ export default function CategorySection() {
                 src={cat.image}
                 alt={cat.name}
                 fill
-                sizes="(max-width: 640px) 50vw, 200px"
-                style={{ objectFit: "cover" }}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
-              <div className="category-card-overlay">
+
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#201b19]/90 via-[#201b19]/35 to-transparent group-hover:from-[#201b19]/95 transition-all duration-300 flex items-end p-5">
                 <div>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-cormorant), serif",
-                      fontSize: "1.15rem",
-                      fontWeight: 600,
-                      color: "var(--cream)",
-                      marginBottom: "0.15rem",
-                    }}
-                  >
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#f5ebdd] mb-1">
                     {cat.name}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter), sans-serif",
-                      fontSize: "0.72rem",
-                      color: "rgba(245,235,221,0.7)",
-                      letterSpacing: "0.04em",
-                    }}
-                  >
+                  </h3>
+                  <p className="font-sans text-[11px] text-[#f5ebdd]/75 line-clamp-1 tracking-wide">
                     {cat.description}
                   </p>
                 </div>

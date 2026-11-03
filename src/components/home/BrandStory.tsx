@@ -1,157 +1,87 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function BrandStory() {
+  const pillars = [
+    { label: "Direct Sourcing", desc: "Conscientiously sourced single-origin beans" },
+    { label: "Slow Kitchen", desc: "Stone-baked sourdough crusts and fresh sauces" },
+    { label: "Sanctuary Ambience", desc: "Warm lighting, soft seating and peaceful patio" },
+    { label: "Warm Hospitality", desc: "Attentive care in every interaction" },
+  ];
+
   return (
-    <section
-      className="section"
-      style={{ background: "var(--espresso)", overflow: "hidden" }}
-    >
-      <div className="container">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "2.5rem",
-            alignItems: "center",
-          }}
-        >
-          {/* Image */}
-          <div
-            style={{
-              position: "relative",
-              borderRadius: "var(--radius-lg)",
-              overflow: "hidden",
-              aspectRatio: "4/5",
-              boxShadow: "0 24px 64px rgba(0,0,0,0.3)",
-            }}
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=85"
-              alt="A barista crafting coffee at Mocha Vista"
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              style={{ objectFit: "cover" }}
-            />
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(to top, rgba(32,27,25,0.35) 0%, transparent 60%)",
-              }}
-            />
-            {/* Accent detail */}
-            <div
-              aria-hidden="true"
-              style={{
-                position: "absolute",
-                top: "1.5rem",
-                right: "-1.5rem",
-                width: "120px",
-                height: "120px",
-                borderRadius: "50%",
-                border: "1.5px solid rgba(185,130,84,0.4)",
-              }}
-            />
+    <section className="py-12 md:py-16 bg-[#201b19] text-[#f5ebdd] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Image Side */}
+          <div className="lg:col-span-5 relative">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-[#f5ebdd]/10">
+              <Image
+                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=85"
+                alt="A barista crafting coffee at Mocha Vista"
+                fill
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                className="object-cover"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-[#201b19]/60 to-transparent"
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* Accent floating pill */}
+            <div className="absolute -bottom-6 -right-4 sm:-right-6 bg-[#b98254] text-white p-5 sm:p-6 rounded-2xl shadow-xl max-w-[200px]">
+              <span className="font-serif text-2xl sm:text-3xl font-semibold italic block leading-tight">
+                Crafted Daily
+              </span>
+              <span className="font-sans text-[11px] uppercase tracking-wider text-white/80 block mt-1">
+                With Passion &amp; Care
+              </span>
+            </div>
           </div>
 
-          {/* Text */}
-          <div>
-            <span className="section-label" style={{ color: "var(--caramel)" }}>
-              Our Story
+          {/* Text Side */}
+          <div className="lg:col-span-7 lg:pl-6">
+            <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#b98254] block mb-3 font-sans">
+              Our Philosophy
             </span>
-            <h2
-              style={{
-                fontFamily: "var(--font-cormorant), serif",
-                fontSize: "clamp(2rem, 4vw, 3rem)",
-                fontWeight: 600,
-                color: "var(--cream)",
-                lineHeight: 1.15,
-                marginBottom: "1.5rem",
-              }}
-            >
+
+            <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold text-[#f5ebdd] leading-tight mb-6">
               A Place Where Every Detail is Considered
             </h2>
-            <div
-              style={{
-                fontFamily: "var(--font-inter), sans-serif",
-                fontSize: "0.95rem",
-                lineHeight: 1.9,
-                color: "rgba(245,235,221,0.72)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-              }}
-            >
+
+            <div className="space-y-4 font-sans text-sm sm:text-base text-[#f5ebdd]/75 leading-relaxed mb-10">
               <p>
-                Mocha Vista was born from a simple belief: that a great café
-                experience is about more than what&apos;s on the plate. It is
-                about the warmth of the space, the care put into every cup, and
-                the feeling that you can slow down and truly savour a moment.
+                Mocha Vista was founded on a simple conviction: that a memorable café experience extends far beyond the plate. It lives in the quiet warmth of the morning sun through the terrace, the gentle clink of ceramic cups, and the knowledge that you can linger without being rushed.
               </p>
               <p>
-                Our kitchen is a place of craft. Every dish on our menu is
-                thoughtfully assembled — using quality ingredients, honest
-                recipes, and a genuine desire to make your experience memorable.
-                From the first espresso of the morning to the last dessert of
-                the evening, we take pride in what we serve.
-              </p>
-              <p>
-                Whether you are joining us for a quiet solo coffee, a long lunch
-                with a friend, or a relaxed evening — Mocha Vista is your
-                place. Pull up a chair. Stay awhile.
+                Our baristas dial in our espresso daily to honor the subtle tasting notes of chocolate, caramel, and citrus. In the kitchen, our chefs hand-stretch dough, prepare fresh reductions, and balance spices to deliver food that feels both comforting and distinctly refined.
               </p>
             </div>
 
-            {/* Values */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1.25rem",
-                marginTop: "2rem",
-              }}
-            >
-              {[
-                { label: "Quality", desc: "Carefully chosen ingredients" },
-                { label: "Comfort", desc: "A welcoming space for all" },
-                { label: "Craft", desc: "Thoughtfully prepared food" },
-                { label: "Memory", desc: "Moments worth returning for" },
-              ].map((v) => (
-                <div key={v.label}>
-                  <div
-                    style={{
-                      width: 32,
-                      height: 2,
-                      background: "var(--caramel)",
-                      marginBottom: "0.5rem",
-                    }}
-                    aria-hidden="true"
-                  />
-                  <p
-                    style={{
-                      fontFamily: "var(--font-cormorant), serif",
-                      fontSize: "1.05rem",
-                      fontWeight: 600,
-                      color: "var(--cream)",
-                      marginBottom: "0.2rem",
-                    }}
-                  >
-                    {v.label}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter), sans-serif",
-                      fontSize: "0.8rem",
-                      color: "rgba(245,235,221,0.55)",
-                    }}
-                  >
-                    {v.desc}
+            {/* Pillars Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 border-t border-[#f5ebdd]/15 mb-8">
+              {pillars.map((item) => (
+                <div key={item.label}>
+                  <div className="w-8 h-0.5 bg-[#b98254] mb-2.5" />
+                  <h3 className="font-serif text-lg font-semibold text-[#f5ebdd] mb-1">
+                    {item.label}
+                  </h3>
+                  <p className="font-sans text-xs text-[#f5ebdd]/60">
+                    {item.desc}
                   </p>
                 </div>
               ))}
             </div>
+
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#b98254] hover:text-white group font-sans transition-colors"
+            >
+              <span>Read Our Full Story</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </div>

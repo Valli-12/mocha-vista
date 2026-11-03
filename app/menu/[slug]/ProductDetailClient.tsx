@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { formatINR } from "@/lib/utils";
 import type { MenuItem } from "@/data/menu";
+import { Minus, Plus, ShoppingBag, Check } from "lucide-react";
 
 export default function ProductDetailClient({ item }: { item: MenuItem }) {
   const { addItem } = useCart();
@@ -49,102 +50,69 @@ export default function ProductDetailClient({ item }: { item: MenuItem }) {
     });
 
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+    setTimeout(() => setAdded(false), 2200);
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {/* Category label */}
-      <p
-        style={{
-          fontFamily: "var(--font-inter), sans-serif",
-          fontSize: "0.72rem",
-          fontWeight: 600,
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "var(--caramel)",
-        }}
-      >
-        {item.category}
-      </p>
-
-      {/* Name */}
-      <h1
-        style={{
-          fontFamily: "var(--font-cormorant), serif",
-          fontSize: "clamp(2rem, 4vw, 3rem)",
-          fontWeight: 600,
-          color: "var(--espresso)",
-          lineHeight: 1.1,
-          margin: 0,
-        }}
-      >
-        {item.name}
-      </h1>
+    <div className="flex flex-col space-y-6 font-sans">
+      {/* Category kicker */}
+      <div>
+        <span className="text-xs font-bold tracking-[0.25em] uppercase text-[#b98254] block mb-1">
+          {item.category}
+        </span>
+        <h1 className="font-serif text-3xl sm:text-5xl font-semibold text-[#201b19] tracking-tight leading-tight">
+          {item.name}
+        </h1>
+      </div>
 
       {/* Price */}
-      <p
-        style={{
-          fontFamily: "var(--font-cormorant), serif",
-          fontSize: "1.75rem",
-          fontWeight: 600,
-          color: "var(--espresso)",
-        }}
-      >
-        {formatINR(effectivePrice)}
+      <div className="flex items-baseline gap-3">
+        <span className="font-serif text-3xl sm:text-4xl font-bold text-[#201b19]">
+          {formatINR(effectivePrice)}
+        </span>
         {addOnTotal > 0 && (
-          <span
-            style={{
-              fontSize: "1.1rem",
-              color: "var(--caramel)",
-              marginLeft: "0.5rem",
-            }}
-          >
-            + {formatINR(addOnTotal)} add-ons
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#b98254]">
+            + {formatINR(addOnTotal)} in custom add-ons
           </span>
         )}
-      </p>
+      </div>
 
       {/* Description */}
-      <p
-        style={{
-          fontFamily: "var(--font-inter), sans-serif",
-          fontSize: "0.95rem",
-          lineHeight: 1.8,
-          color: "var(--text-secondary)",
-        }}
-      >
+      <p className="text-sm sm:text-base text-[#5a4a3a] leading-relaxed">
         {item.description}
       </p>
 
-      <hr className="divider" />
+      <div className="w-full h-px bg-[#201b19]/10" />
 
-      {/* Variants */}
+      {/* Size / Variant Options */}
       {item.variants && item.variants.length > 0 && (
         <div>
-          <label
-            className="form-label"
-            style={{ marginBottom: "0.75rem", display: "block" }}
-          >
-            Size / Variant
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#5a4a3a] mb-3">
+            Select Size / Variant
           </label>
-          <div style={{ display: "flex", gap: "0.625rem", flexWrap: "wrap" }}>
-            {item.variants.map((v) => (
-              <button
-                key={v.name}
-                id={`variant-${v.name.replace(/\s+/g, "-").toLowerCase()}`}
-                className={`filter-chip ${selectedVariant?.name === v.name ? "active" : ""}`}
-                onClick={() => setSelectedVariant(v)}
-                style={{ padding: "0.5rem 1.25rem" }}
-              >
-                {v.name}
-                {v.price !== item.price && (
-                  <span style={{ marginLeft: "0.375rem", opacity: 0.75 }}>
-                    {formatINR(v.price)}
-                  </span>
-                )}
-              </button>
-            ))}
+          <div className="flex flex-wrap gap-2.5">
+            {item.variants.map((v) => {
+              const isSelected = selectedVariant?.name === v.name;
+              return (
+                <button
+                  key={v.name}
+                  id={`variant-${v.name.replace(/\s+/g, "-").toLowerCase()}`}
+                  onClick={() => setSelectedVariant(v)}
+                  className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wider transition-all border ${
+                    isSelected
+                      ? "bg-[#201b19] text-[#f5ebdd] border-[#201b19] shadow-xs"
+                      : "bg-white text-[#5a4a3a] border-[#201b19]/15 hover:border-[#b98254]"
+                  }`}
+                >
+                  <span>{v.name}</span>
+                  {v.price !== item.price && (
+                    <span className="ml-1.5 opacity-80 font-normal">
+                      ({formatINR(v.price)})
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -152,117 +120,103 @@ export default function ProductDetailClient({ item }: { item: MenuItem }) {
       {/* Add-ons */}
       {item.addOns && item.addOns.length > 0 && (
         <div>
-          <label className="form-label" style={{ marginBottom: "0.75rem", display: "block" }}>
-            Add-ons (optional)
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#5a4a3a] mb-3">
+            Custom Add-ons (Optional)
           </label>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            {item.addOns.map((ao) => (
-              <label
-                key={ao.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
-                  cursor: "pointer",
-                  padding: "0.625rem 0.875rem",
-                  borderRadius: "var(--radius)",
-                  border: `1.5px solid ${selectedAddOns.includes(ao.id) ? "var(--caramel)" : "var(--border)"}`,
-                  background: selectedAddOns.includes(ao.id) ? "rgba(185,130,84,0.06)" : "transparent",
-                  transition: "all 0.2s",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  id={`addon-${ao.id}`}
-                  checked={selectedAddOns.includes(ao.id)}
-                  onChange={() => toggleAddOn(ao.id)}
-                  style={{ accentColor: "var(--caramel)" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter), sans-serif",
-                    fontSize: "0.875rem",
-                    color: "var(--text-secondary)",
-                    flex: 1,
-                  }}
+          <div className="space-y-2">
+            {item.addOns.map((ao) => {
+              const isChecked = selectedAddOns.includes(ao.id);
+              return (
+                <label
+                  key={ao.id}
+                  className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
+                    isChecked
+                      ? "border-[#b98254] bg-[#b98254]/5 text-[#201b19]"
+                      : "border-[#201b19]/10 hover:border-[#201b19]/25 text-[#5a4a3a] bg-white/50"
+                  }`}
                 >
-                  {ao.name}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter), sans-serif",
-                    fontSize: "0.875rem",
-                    color: "var(--caramel)",
-                    fontWeight: 600,
-                  }}
-                >
-                  + {formatINR(ao.price)}
-                </span>
-              </label>
-            ))}
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id={`addon-${ao.id}`}
+                      checked={isChecked}
+                      onChange={() => toggleAddOn(ao.id)}
+                      className="w-4 h-4 rounded text-[#b98254] focus:ring-[#b98254] border-gray-300"
+                    />
+                    <span className="text-xs sm:text-sm font-medium">{ao.name}</span>
+                  </div>
+                  <span className="text-xs font-semibold text-[#b98254]">
+                    + {formatINR(ao.price)}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Special instructions */}
+      {/* Special Kitchen Notes */}
       <div>
-        <label htmlFor="special-instructions" className="form-label">
-          Special Instructions (optional)
+        <label htmlFor="special-instructions" className="block text-xs font-bold uppercase tracking-wider text-[#5a4a3a] mb-2">
+          Special Preparation Requests
         </label>
         <textarea
           id="special-instructions"
-          className="form-input"
-          rows={3}
-          placeholder="E.g. extra spicy, no onions, etc."
+          rows={2}
+          placeholder="E.g. Extra hot, no sugar, oat milk substitution..."
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
-          style={{ resize: "vertical" }}
+          className="w-full px-4 py-3 rounded-xl border border-[#201b19]/15 text-xs sm:text-sm text-[#201b19] placeholder:text-[#9b8272] bg-white/70 focus:outline-none focus:border-[#b98254] focus:ring-1 focus:ring-[#b98254] transition-all resize-none"
         />
       </div>
 
-      {/* Quantity + Add to Cart */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1rem",
-          flexWrap: "wrap",
-        }}
-      >
-        <div className="qty-control" aria-label="Quantity selector">
+      {/* Quantity Stepper & Add Button */}
+      <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        {/* Stepper */}
+        <div className="inline-flex items-center justify-between border border-[#201b19]/20 rounded-xl bg-white p-1 shrink-0">
           <button
-            id="product-qty-decrease"
-            className="qty-btn"
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#f5ebdd] text-[#201b19] transition-colors"
             aria-label="Decrease quantity"
           >
-            −
+            <Minus className="w-4 h-4" />
           </button>
-          <span className="qty-value" aria-live="polite">
+          <span className="w-12 text-center font-bold text-sm text-[#201b19]" aria-live="polite">
             {quantity}
           </span>
           <button
-            id="product-qty-increase"
-            className="qty-btn"
             onClick={() => setQuantity(quantity + 1)}
+            className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-[#f5ebdd] text-[#201b19] transition-colors"
             aria-label="Increase quantity"
           >
-            +
+            <Plus className="w-4 h-4" />
           </button>
         </div>
 
+        {/* Action Button */}
         <button
-          id="product-add-to-cart"
-          className="btn-primary"
-          style={{ flex: 1, minWidth: 180 }}
           onClick={handleAddToCart}
+          id="product-add-to-cart"
           disabled={!item.isAvailable}
+          className={`flex-1 py-4 px-6 rounded-xl text-xs font-bold tracking-widest uppercase transition-all shadow-md flex items-center justify-center gap-2 ${
+            !item.isAvailable
+              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+              : added
+              ? "bg-emerald-700 text-white"
+              : "bg-[#b98254] hover:bg-[#8f5e35] text-white hover:shadow-lg active:scale-98"
+          }`}
         >
-          {!item.isAvailable
-            ? "Currently Unavailable"
-            : added
-            ? "✓ Added to Cart"
-            : `Add to Cart — ${formatINR(lineTotal)}`}
+          {added ? (
+            <>
+              <Check className="w-4 h-4 stroke-[2.5]" />
+              <span>Added to Bag!</span>
+            </>
+          ) : (
+            <>
+              <ShoppingBag className="w-4 h-4" />
+              <span>Add to Cart — {formatINR(lineTotal)}</span>
+            </>
+          )}
         </button>
       </div>
     </div>
