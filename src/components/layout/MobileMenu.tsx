@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
@@ -14,10 +14,13 @@ export default function MobileMenu({
   pathname: string;
 }) {
   const [open, setOpen] = useState(false);
+  const drawerRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Close helper
   const handleClose = useCallback(() => {
     setOpen(false);
+    triggerRef.current?.focus();
   }, []);
 
   // Prevent body scroll when open
@@ -32,22 +35,53 @@ export default function MobileMenu({
     };
   }, [open]);
 
-  // Handle escape key
+  // Focus trap and escape key handler
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
+    if (!open) return;
+
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    const focusable = drawer.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusable[0];
+    const lastElement = focusable[focusable.length - 1];
+
+    // Auto focus first element on open
+    firstElement?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
         handleClose();
+        return;
+      }
+
+      if (e.key === "Tab") {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
       }
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, handleClose]);
 
   return (
     <>
       {/* Hamburger Button — visible only on mobile */}
       <button
-        className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-[#5a4a3a] hover:text-[#201b19] hover:bg-[#201b19]/5 transition-colors"
+        ref={triggerRef}
+        className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-[#5a4a3a] hover:text-[#201b19] hover:bg-[#201b19]/5 transition-colors cursor-pointer"
         id="mobile-menu-btn"
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
@@ -68,6 +102,7 @@ export default function MobileMenu({
 
       {/* Drawer */}
       <nav
+        ref={drawerRef}
         id="mobile-nav"
         role="dialog"
         aria-modal="true"
@@ -87,7 +122,7 @@ export default function MobileMenu({
           <button
             onClick={handleClose}
             aria-label="Close menu"
-            className="flex items-center justify-center w-9 h-9 rounded-full text-[#5a4a3a] hover:text-[#201b19] hover:bg-[#201b19]/5 transition-colors"
+            className="flex items-center justify-center w-9 h-9 rounded-full text-[#5a4a3a] hover:text-[#201b19] hover:bg-[#201b19]/5 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -103,7 +138,7 @@ export default function MobileMenu({
                   onClick={handleClose}
                   className={`block py-3 px-3 rounded-lg font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                     isActive
-                      ? "text-[#b98254] bg-[#201b19]/5"
+                      ? "text-[#b98254] bg-[#201b19]/5 font-bold"
                       : "text-[#201b19] hover:text-[#b98254] hover:bg-[#201b19]/5"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -119,7 +154,7 @@ export default function MobileMenu({
               onClick={handleClose}
               className={`block py-3 px-3 rounded-lg font-sans text-sm font-semibold tracking-wider uppercase transition-colors ${
                 pathname === "/cart"
-                  ? "text-[#b98254] bg-[#201b19]/5"
+                  ? "text-[#b98254] bg-[#201b19]/5 font-bold"
                   : "text-[#201b19] hover:text-[#b98254] hover:bg-[#201b19]/5"
               }`}
             >
@@ -132,7 +167,7 @@ export default function MobileMenu({
           <Link
             href="/menu"
             onClick={handleClose}
-            className="btn-primary w-full flex justify-center text-center py-3.5 text-xs font-semibold tracking-widest"
+            className="btn-primary w-full flex justify-center text-center py-3.5 text-xs font-semibold tracking-widest cursor-pointer"
           >
             Order Now
           </Link>

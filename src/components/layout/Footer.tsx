@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import NewsletterForm from "./NewsletterForm";
 import { MapPin, Clock, Phone, Mail } from "lucide-react";
 
@@ -21,7 +22,7 @@ function FacebookIcon({ className = "w-4 h-4" }: { className?: string }) {
 }
 
 export default function Footer() {
-  const year = 2026;
+  const currentYear = 2026;
 
   return (
     <footer className="w-full bg-[#201b19] text-[#f5ebdd] font-sans overflow-hidden">
@@ -80,33 +81,33 @@ export default function Footer() {
 
           {/* Right Gallery Column */}
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3.5">
-            <div
-              className="h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md hover:-translate-y-1 transition-transform duration-300"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&q=85')",
-              }}
-              role="img"
-              aria-label="Mocha Vista café seating area"
-            />
-            <div
-              className="h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md hover:-translate-y-1 transition-transform duration-300"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1534778101976-62847782c213?w=700&q=85')",
-              }}
-              role="img"
-              aria-label="Fresh latte art and pastry"
-            />
-            <div
-              className="h-56 sm:h-72 rounded-xl bg-cover bg-center shadow-md col-span-2 sm:col-span-1 hover:-translate-y-1 transition-transform duration-300"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=85')",
-              }}
-              role="img"
-              aria-label="Outdoor terrace seating"
-            />
+            <div className="group relative h-56 sm:h-72 rounded-2xl overflow-hidden shadow-md bg-[#201b19]/60 border border-white/10">
+              <Image
+                src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=700&q=85"
+                alt="Mocha Vista café seating area"
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover group-hover:scale-106 transition-transform duration-500 ease-out"
+              />
+            </div>
+            <div className="group relative h-56 sm:h-72 rounded-2xl overflow-hidden shadow-md bg-[#201b19]/60 border border-white/10">
+              <Image
+                src="https://images.unsplash.com/photo-1534778101976-62847782c213?w=700&q=85"
+                alt="Fresh latte art and pastry"
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover group-hover:scale-106 transition-transform duration-500 ease-out"
+              />
+            </div>
+            <div className="group relative h-56 sm:h-72 rounded-2xl overflow-hidden shadow-md col-span-2 sm:col-span-1 bg-[#201b19]/60 border border-white/10">
+              <Image
+                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=700&q=85"
+                alt="Outdoor terrace seating"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover group-hover:scale-106 transition-transform duration-500 ease-out"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -163,7 +164,7 @@ export default function Footer() {
       {/* BOTTOM LEGAL BAR */}
       <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#f5ebdd]/60 font-sans">
         <p className="m-0">
-          © {year} Mocha Vista Café. All Rights Reserved.
+          © {currentYear} Mocha Vista Café. All Rights Reserved.
         </p>
         <nav className="flex items-center gap-6" aria-label="Legal links">
           <Link href="/privacy" className="hover:text-[#b98254] transition-colors">

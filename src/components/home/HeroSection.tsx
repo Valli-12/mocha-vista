@@ -28,7 +28,7 @@ export default function HeroSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-14 lg:py-20">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:py-12 lg:py-12">
         <div className="max-w-2xl">
           <span className="inline-flex items-center gap-2 font-sans text-xs font-bold tracking-[0.28em] uppercase text-[#b98254] mb-6">
             <Sparkles className="w-3.5 h-3.5" />

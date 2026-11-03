@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
+import { useCart, getCartItemId } from "@/context/CartContext";
 import { formatINR } from "@/lib/utils";
 import type { MenuItem } from "@/data/menu";
 import { Minus, Plus, ShoppingBag, Check } from "lucide-react";
@@ -39,7 +39,8 @@ export default function ProductDetailClient({ item }: { item: MenuItem }) {
       : [];
 
     addItem({
-      id: `${item.id}-${selectedVariant?.name ?? "default"}-${selectedAddOns.join("-")}`,
+      id: getCartItemId(item.id, selectedVariant?.name, selectedAddOns),
+      productId: item.id,
       name: item.name,
       price: effectivePrice + addOnTotal,
       image: item.image,

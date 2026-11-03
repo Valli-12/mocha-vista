@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useDeferredValue } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { menuItems } from "@/data/menu";
@@ -24,6 +24,7 @@ export default function MenuClient() {
   // Directly derive active category from URL query parameters (single source of truth)
   const selectedCategory = searchParams.get("category") || "All";
   const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
   const [vegOnly, setVegOnly] = useState(false);
   const [nonVegOnly, setNonVegOnly] = useState(false);
   const [sort, setSort] = useState<SortOption>("default");
@@ -52,8 +53,8 @@ export default function MenuClient() {
       result = result.filter((item) => item.category === selectedCategory);
     }
 
-    if (search.trim()) {
-      const q = search.toLowerCase().trim();
+    if (deferredSearch.trim()) {
+      const q = deferredSearch.toLowerCase().trim();
       result = result.filter(
         (item) =>
           item.name.toLowerCase().includes(q) ||
@@ -79,7 +80,7 @@ export default function MenuClient() {
     }
 
     return result;
-  }, [selectedCategory, search, vegOnly, nonVegOnly, sort]);
+  }, [selectedCategory, deferredSearch, vegOnly, nonVegOnly, sort]);
 
   // Group items by category for the full "All" book view
   const isDefaultFullView =
@@ -174,7 +175,7 @@ export default function MenuClient() {
       </section>
 
       {/* ── 2. STICKY FILTER & SEARCH CONTROLS ──────────────── */}
-      <div className="sticky top-[64px] md:top-[72px] z-30 bg-[#f5ebdd]/95 backdrop-blur-md border-b border-[#201b19]/10 shadow-xs">
+      <div className="sticky top-[70px] z-30 bg-[#f5ebdd]/95 backdrop-blur-md border-b border-[#201b19]/10 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 space-y-3">
           {/* Horizontal Category Scroll Bar */}
           <div

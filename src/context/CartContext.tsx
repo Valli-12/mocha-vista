@@ -11,6 +11,7 @@ import React, {
 
 export type CartItem = {
   id: string;
+  productId?: string;
   name: string;
   price: number;
   image: string;
@@ -19,6 +20,16 @@ export type CartItem = {
   addOns?: string[];
   specialInstructions?: string;
 };
+
+export function getCartItemId(
+  productId: string,
+  variant?: string,
+  addOns?: string[]
+): string {
+  const v = variant ? variant.trim().toLowerCase() : "standard";
+  const a = addOns && addOns.length > 0 ? [...addOns].sort().join("-") : "none";
+  return `${productId}__${v}__${a}`;
+}
 
 type CartState = {
   items: CartItem[];
@@ -35,15 +46,12 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
       const existing = state.items.find(
-        (item) =>
-          item.id === action.payload.id &&
-          item.variant === action.payload.variant
+        (item) => item.id === action.payload.id
       );
       if (existing) {
         return {
           items: state.items.map((item) =>
-            item.id === action.payload.id &&
-            item.variant === action.payload.variant
+            item.id === action.payload.id
               ? { ...item, quantity: item.quantity + action.payload.quantity }
               : item
           ),

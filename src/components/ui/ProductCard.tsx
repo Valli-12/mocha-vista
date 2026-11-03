@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { MenuItem } from "@/data/menu";
-import { useCart } from "@/context/CartContext";
+import { useCart, getCartItemId } from "@/context/CartContext";
 import DietBadge from "./DietBadge";
 import { Plus, Check, Sparkles } from "lucide-react";
 
@@ -21,7 +21,7 @@ export default function ProductCard({ item, priority = false }: ProductCardProps
 
   // Keep track of how many of this item are currently in the cart
   const inCartCount = items
-    .filter((cartItem) => cartItem.id === item.id)
+    .filter((cartItem) => (cartItem.productId || cartItem.id.split("__")[0]) === item.id)
     .reduce((total, cartItem) => total + cartItem.quantity, 0);
 
   // Clear "Added" badge state after 1.4 seconds
@@ -39,7 +39,8 @@ export default function ProductCard({ item, priority = false }: ProductCardProps
     if (!item.isAvailable) return;
 
     addItem({
-      id: item.id,
+      id: getCartItemId(item.id),
+      productId: item.id,
       name: item.name,
       price: item.price,
       image: item.image,
