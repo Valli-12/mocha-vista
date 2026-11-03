@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-
-   images: {
+  images: {
+    // Enable direct browser loading to prevent Node dev server timeouts & rate limits from Unsplash
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",

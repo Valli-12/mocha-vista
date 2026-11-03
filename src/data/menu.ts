@@ -23,6 +23,7 @@ export type MenuItem = {
   addOns?: AddOn[];
   featured?: boolean;
   stockQty?: number;
+  badge?: string;
 };
 
 export const menuItems: MenuItem[] = [
@@ -40,6 +41,7 @@ export const menuItems: MenuItem[] = [
     isVegetarian: true,
     isAvailable: true,
     featured: true,
+    badge: "Bestseller",
     stockQty: 50,
     variants: [
       { name: "Regular", price: 299 },
@@ -124,9 +126,11 @@ export const menuItems: MenuItem[] = [
     category: "Pizza",
     image:
       "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80",
+      
     isVegetarian: true,
     isAvailable: true,
     featured: true,
+    badge: "Bestseller",
     stockQty: 25,
     variants: [
       { name: 'Small (8")', price: 449 },
@@ -170,6 +174,7 @@ export const menuItems: MenuItem[] = [
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80",
     isVegetarian: false,
     isAvailable: true,
+    badge: "Bestseller",
     stockQty: 18,
     variants: [
       { name: 'Small (8")', price: 599 },
@@ -189,6 +194,7 @@ export const menuItems: MenuItem[] = [
       "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=600&q=80",
     isVegetarian: true,
     isAvailable: true,
+    
     stockQty: 22,
     variants: [
       { name: 'Small (8")', price: 549 },
@@ -210,6 +216,7 @@ export const menuItems: MenuItem[] = [
     isVegetarian: true,
     isAvailable: true,
     featured: true,
+    badge: "Bestseller",
     stockQty: 35,
     variants: [
       { name: "Single", price: 349 },
@@ -289,6 +296,7 @@ export const menuItems: MenuItem[] = [
     isVegetarian: true,
     isAvailable: true,
     featured: true,
+    badge: "Bestseller",
     stockQty: 25,
     variants: [
       { name: "Regular", price: 379 },
@@ -348,6 +356,7 @@ export const menuItems: MenuItem[] = [
       "https://images.unsplash.com/photo-1548921441-89c8bd86ffb7?w=600&q=80",
     isVegetarian: true,
     isAvailable: true,
+    badge: "Bestseller",
     stockQty: 20,
     variants: [
       { name: "Regular", price: 399 },
@@ -425,6 +434,7 @@ export const menuItems: MenuItem[] = [
     isVegetarian: true,
     isAvailable: true,
     featured: true,
+    badge: "Bestseller",
     stockQty: 60,
     variants: [
       { name: "Regular", price: 199 },
@@ -667,6 +677,7 @@ export const menuItems: MenuItem[] = [
       "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80",
     isVegetarian: true,
     isAvailable: true,
+    badge: "Bestseller",
     stockQty: 20,
   },
   {

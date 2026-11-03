@@ -15,23 +15,29 @@ export default function DietBadge({
 
   const isVeg = isVegetarian;
   const label = isVeg ? "Vegetarian" : "Non-Vegetarian";
-  const borderColor = isVeg ? "border-emerald-700" : "border-rose-700";
-  const dotColor = isVeg ? "bg-emerald-700 text-emerald-700" : "bg-rose-700 text-rose-700";
-  const textColor = isVeg ? "text-emerald-800" : "text-rose-800";
+  const borderColor = isVeg ? "border-[#22863a]" : "border-[#cb2431]";
+  const dotColor = isVeg ? "bg-[#22863a]" : "bg-[#cb2431]";
+  const textColor = isVeg ? "text-[#1e6b2c]" : "text-[#b31d28]";
 
   return (
     <div
       aria-label={label}
       title={label}
-      className={`inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded bg-white/95 border ${borderColor} shadow-xs backdrop-blur-xs ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-white/95 backdrop-blur-md shadow-xs border border-white/80 ${className}`}
     >
-      <span className={`inline-block w-2 h-2 rounded-full border border-current ${dotColor}`} />
+      {/* Authentic FSSAI-style dietary symbol */}
+      <span
+        className={`flex items-center justify-center w-3 h-3 rounded-[2.5px] border ${borderColor} p-[1.5px] shrink-0`}
+      >
+        <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
+      </span>
       {showText && (
-        <span className={`text-[11px] font-medium tracking-wide uppercase font-sans ${textColor}`}>
+        <span
+          className={`text-[10px] font-bold tracking-wider uppercase font-sans ${textColor}`}
+        >
           {isVeg ? "Veg" : "Non-Veg"}
         </span>
       )}
     </div>
   );
 }
-

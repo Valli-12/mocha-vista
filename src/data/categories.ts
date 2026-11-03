@@ -8,12 +8,20 @@ export type Category = {
 
 export const categories: Category[] = [
   {
+    id: "cat-coffee",
+    name: "Coffee",
+    slug: "Coffee",
+    image:
+      "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
+    description: "Expertly roasted, lovingly poured specialty espresso and brew",
+  },
+  {
     id: "cat-pizza",
     name: "Pizza",
     slug: "Pizza",
     image:
       "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80",
-    description: "Hand-stretched, stone-baked perfection",
+    description: "Hand-stretched sourdough, stone-baked to crisp perfection",
   },
   {
     id: "cat-burgers",
@@ -21,7 +29,7 @@ export const categories: Category[] = [
     slug: "Burgers",
     image:
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80",
-    description: "Stacked, sauced and irresistible",
+    description: "Brioche buns, artisanal patties, and signature house sauces",
   },
   {
     id: "cat-pasta",
@@ -29,7 +37,7 @@ export const categories: Category[] = [
     slug: "Pasta",
     image:
       "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80",
-    description: "Al dente, every time",
+    description: "Al dente fresh pasta tossed in slowly simmered sauces",
   },
   {
     id: "cat-sandwiches",
@@ -37,7 +45,7 @@ export const categories: Category[] = [
     slug: "Sandwiches",
     image:
       "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80",
-    description: "Pressed and layered with flavour",
+    description: "Artisan sourdough and focaccia pressed with gourmet fillings",
   },
   {
     id: "cat-fries",
@@ -45,23 +53,7 @@ export const categories: Category[] = [
     slug: "Fries",
     image:
       "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80",
-    description: "Crispy sides for every mood",
-  },
-  {
-    id: "cat-coffee",
-    name: "Coffee",
-    slug: "Coffee",
-    image:
-      "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80",
-    description: "Expertly crafted, lovingly served",
-  },
-  {
-    id: "cat-mocktails",
-    name: "Mocktails",
-    slug: "Mocktails",
-    image:
-      "https://images.unsplash.com/photo-1546171753-97d7676e4602?w=400&q=80",
-    description: "Refreshing sips, zero compromise",
+    description: "Golden hand-cut fries and seasoned crunch platters",
   },
   {
     id: "cat-chinese",
@@ -69,7 +61,15 @@ export const categories: Category[] = [
     slug: "Chinese Food",
     image:
       "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80",
-    description: "Bold, wok-tossed flavours",
+    description: "Wok-tossed noodles, dumplings, and bold aromatic sizzlers",
+  },
+  {
+    id: "cat-mocktails",
+    name: "Mocktails",
+    slug: "Mocktails",
+    image:
+      "https://images.unsplash.com/photo-1546171753-97d7676e4602?w=400&q=80",
+    description: "Cold-pressed botanicals, sparkling tonics, and fruit fusions",
   },
   {
     id: "cat-desserts",
@@ -77,6 +77,6 @@ export const categories: Category[] = [
     slug: "Desserts",
     image:
       "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&q=80",
-    description: "Sweet endings, perfectly crafted",
+    description: "Warm Belgian waffles, rich cheesecakes, and molten fudge",
   },
 ];
